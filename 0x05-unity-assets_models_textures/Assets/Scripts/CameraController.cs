@@ -1,28 +1,38 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     public GameObject player;
-    public Vector3 offset;
+    public Transform cameraTarget;
+    float mouseX, mouseY;
+    public float sens, playerDistance;
+    private float yRotation, xRotation;
+    private Vector3 currentRotation, smoothVelocity;
+    public float smoothTime;
+    // Start is called before the first frame update
     void Start()
     {
-        offset = new Vector3(0f, 1.25f, -6.25f);
+        sens = 4f;
+        playerDistance = 6.25f;
+        smoothVelocity = Vector3.zero;
+        smoothTime = 0.01f;
     }
+
+    // Update is called once per frame
     void Update()
     {
-        transform.position = player.transform.position + offset;
-    }
-    public static Vector3[] CamDirection(Camera mainCam, Vector3 forwardCam, Vector3 rightCam)
-    {
-        Vector3[] values = new Vector3[2];
-        forwardCam = mainCam.transform.forward;
-        rightCam = mainCam.transform.right;
-        forwardCam.y = 0;
-        rightCam.y = 0;
-        forwardCam = forwardCam.normalized;
-        rightCam = rightCam.normalized;
-        values[0] = rightCam;
-        values[1] = forwardCam;
-        return (values);
+        mouseX = Input.GetAxis("Mouse X") * sens;
+        mouseY = Input.GetAxis("Mouse Y") * sens;
+        yRotation += mouseX;
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -5, 60);
+
+        Vector3 nextRotation = new Vector3(xRotation, yRotation);
+        currentRotation = Vector3.SmoothDamp(currentRotation, nextRotation, ref smoothVelocity, smoothTime);
+
+        transform.localEulerAngles = currentRotation;
+        transform.position = cameraTarget.position - transform.forward * playerDistance;
     }
 }

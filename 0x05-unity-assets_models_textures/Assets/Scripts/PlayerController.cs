@@ -1,35 +1,60 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    public float GRAVITY = 0.1f;
+    private float temporaryGravity;
     public float speed;
     public float jumpForce;
+    public bool doubleJump;
     private Vector3 movement;
-    private Vector3 playerMove;
     private CharacterController player;
-    public Camera mainCam;
-    private Vector3 forwardCam;
-    private Vector3 rightCam;
-    private Vector3[] cam;
+    private float playerRotationSpeed;
+    public Camera cameraFollow;
 
     // Start is called before the first frame update
     void Start()
     {
-        speed = 10f;
-        jumpForce = 10f;
+        playerRotationSpeed = 10f;
+        speed = 5f;
+        jumpForce = 2.5f;
         player = GetComponent<CharacterController>();
+        GRAVITY = 6f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        movement = Vector3.ClampMagnitude(movement, 1);
-        cam = CameraController.CamDirection(mainCam, forwardCam, rightCam);
-        playerMove = movement.x * cam[0] + movement.z * cam[1];
-        player.transform.LookAt(player.transform.position + playerMove);
+        movement = Quaternion.Euler(0, cameraFollow.transform.eulerAngles.y, 0) * new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
+        // Alternative to previos line
+        // movement = Vector3.ClampMagnitude(movement, 1);
+        if (movement != Vector3.zero)
+        {
+            Quaternion rotation = Quaternion.LookRotation(movement, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, playerRotationSpeed * Time.deltaTime);
+        }
+        if (player.isGrounded)
+        {
+            doubleJump = true;
 
-        player.Move(playerMove * speed * Time.deltaTime);
+            temporaryGravity = -GRAVITY * Time.deltaTime;
+            movement.y = temporaryGravity;
+            if (Input.GetButtonDown("Jump"))
+            {
+                temporaryGravity = jumpForce;
+                movement.y = temporaryGravity;
+            }
+        }
+        else
+        {
+            if (Input.GetButtonDown("Jump") && doubleJump)
+            {
+                temporaryGravity = jumpForce;
+                doubleJump = false;
+            }
+            movement.y = temporaryGravity;
+            temporaryGravity -= GRAVITY * Time.deltaTime;
+        }
+        player.Move(movement * speed * Time.deltaTime);
     }
 }
