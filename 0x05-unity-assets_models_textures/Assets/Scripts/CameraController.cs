@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -9,13 +7,12 @@ public class CameraController : MonoBehaviour
     float mouseX, mouseY;
     public float sens, playerDistance;
     private float yRotation, xRotation;
-    private Vector3 currentRotation, smoothVelocity, offset;
+    private Vector3 currentRotation, smoothVelocity;
     public float smoothTime;
     // Start is called before the first frame update
     void Start()
     {
-        offset = new Vector3(0f, 0.92f, -6.25f);
-        sens = 5f;
+        sens = 3f;
         playerDistance = 6.25f;
         smoothVelocity = Vector3.zero;
         smoothTime = 0.1f;
