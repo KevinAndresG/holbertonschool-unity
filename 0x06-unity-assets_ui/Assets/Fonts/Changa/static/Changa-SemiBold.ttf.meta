@@ -10,7 +10,8 @@ TrueTypeFontImporter:
   includeFontData: 1
   fontNames:
   - Changa
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 6b045bd39a4163f469ab6e07ec1da123, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
