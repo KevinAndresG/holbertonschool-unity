@@ -140,9 +140,9 @@ TextureImporter:
       name: button-level03_1
       rect:
         serializedVersion: 2
-        x: 592
+        x: 601
         y: 0
-        width: 616
+        width: 607
         height: 650
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

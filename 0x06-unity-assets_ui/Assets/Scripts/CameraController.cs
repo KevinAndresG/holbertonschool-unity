@@ -17,7 +17,6 @@ public class CameraController : MonoBehaviour
         smoothVelocity = Vector3.zero;
         smoothTime = 0.1f;
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -25,7 +24,7 @@ public class CameraController : MonoBehaviour
         mouseY = Input.GetAxis("Mouse Y") * sens;
         yRotation += mouseX;
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -5, 60);
+        xRotation = Mathf.Clamp(xRotation, -5, 70);
 
         Vector3 nextRotation = new Vector3(xRotation, yRotation);
         currentRotation = Vector3.SmoothDamp(currentRotation, nextRotation, ref smoothVelocity, smoothTime);
