@@ -9,6 +9,7 @@ public class CameraController : MonoBehaviour
     private float yRotation, xRotation;
     private Vector3 currentRotation, smoothVelocity;
     public float smoothTime;
+    public bool isInverted;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +17,7 @@ public class CameraController : MonoBehaviour
         playerDistance = 6.25f;
         smoothVelocity = Vector3.zero;
         smoothTime = 0.1f;
+        isInverted = false;
     }
     // Update is called once per frame
     void Update()
@@ -23,7 +25,10 @@ public class CameraController : MonoBehaviour
         mouseX = Input.GetAxis("Mouse X") * sens;
         mouseY = Input.GetAxis("Mouse Y") * sens;
         yRotation += mouseX;
-        xRotation -= mouseY;
+        if (isInverted)
+            xRotation += mouseY;
+        else
+            xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -5, 70);
 
         Vector3 nextRotation = new Vector3(xRotation, yRotation);
